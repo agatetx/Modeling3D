@@ -1,22 +1,88 @@
-# -*- coding: utf-8 -*-
+from FreeCAD import Base
+import DraftVecUtils, Draft, Part
 
-# Macro Begin: /home/local/ANT/veikherm/Downloads/Examples-master/Basic_Part_Design_Tutorial_Example_Files/eee.FCMacro +++++++++++++++++++++++++++++++++++++++++++++++++
-import FreeCAD
 
-FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(-2,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(-2,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(-1,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(-1,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(0,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(0,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(2,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(2,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(20,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(20,28,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(20,1,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(20,1,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(20,11,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(20,11,0),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument("Unnamed").getObject("myBox").Height = '2 mm'
-FreeCAD.getDocument("Unnamed").getObject("myBox").Height = '20 mm'
-# Macro End: /home/local/ANT/veikherm/Downloads/Examples-master/Basic_Part_Design_Tutorial_Example_Files/eee.FCMacro +++++++++++++++++++++++++++++++++++++++++++++++++
+def add_pyramid(doc, center,width,height):
+
+	doc.addObject("Part::RegularPolygon","RegularPolygon001")
+	doc.RegularPolygon001.Polygon=4
+	doc.RegularPolygon001.Circumradius=width / 2**0.5
+	doc.RegularPolygon001.Placement=Base.Placement(center,App.Rotation(App.Vector(0,0,1),45))
+
+	doc.addObject("Part::Vertex","Vertex001")
+	doc.Vertex001.Placement=Base.Placement(center+Base.Vector(0.00,0.00,height),Base.Rotation(0.00,0.00,0.00,1.00))
+	
+
+	
+	doc.addObject('Part::Loft','Loft')
+	doc.Loft.Sections=[doc.RegularPolygon001, doc.Vertex001, ]
+	doc.Loft.Solid=False
+	doc.Loft.Ruled=False
+	doc.Loft.Closed=False
+	App.ActiveDocument.recompute()
+
+	doc.addObject("Part::Extrusion","Extrude")
+	doc.Extrude.Base = doc.Loft
+	doc.Extrude.Dir = (0,0,height/10)
+	doc.Extrude.Solid = (False)
+	doc.Extrude.TaperAngle = (0)
+
+	cylinder = doc.addObject("Part::Cylinder","cylinder")
+	cylinder.Placement.Base = doc.Vertex001.Placement.Base-Base.Vector(0.00,0.00,height/2)
+	cylinder.Height = height
+	cylinder.Radius = box.Width/20
+	
+	torus = doc.addObject("Part::Torus","torus")
+	
+	torus.Radius1 = height*3/8
+	torus.Radius2 = torus.Radius1/3
+	torus.Placement.Rotation = App.Rotation(App.Vector(0,1,0),90)
+	torus.Placement.Base = doc.Vertex001.Placement.Base+Base.Vector(0.00,0.00,height/2+(torus.Radius1.Value+torus.Radius2.Value)/2)
+	#doc.Loft.Visibility = False
+#add_pyramid(App.ActiveDocument, Base.Vector(0.00,0.00,0.00),60,30)
+
+
+#App.closeDocument("Unnamed")
+doc = FreeCAD.newDocument() 
+box = doc.addObject("Part::Box","myBox") 
+scale = 1
+box.Height = 5*scale
+box.Length = 100*scale
+box.Width = 100*scale
+
+l_wall = doc.copyObject(box)
+l_wall.Width *= 0.8
+Draft.rotate(l_wall,90,axis=FreeCAD.Vector(1))
+r_wall = doc.copyObject(l_wall)
+Draft.move(r_wall, FreeCAD.Vector(0,box.Width,0))
+Draft.move(l_wall, FreeCAD.Vector(0,box.Height,0))
+
+b_wall = Draft.rotate(doc.copyObject(box),-90,axis=FreeCAD.Vector(0,1,0))
+b_wall.Length *= 0.8
+f_wall = doc.copyObject(b_wall)
+Draft.move(f_wall, FreeCAD.Vector(box.Width,0,0))
+Draft.move(b_wall, FreeCAD.Vector(box.Height,0,0))
+
+hole = doc.addObject("Part::Cylinder","hole") 
+hole.Height = box.Height*3
+hole.Radius = box.Width/6
+Draft.rotate(hole,90,axis=FreeCAD.Vector(0,1,0))
+hole.Placement.Base = f_wall.Shape.Solids[0].CenterOfMass-FreeCAD.Vector(box.Height,0,0)
+
+stake = doc.addObject("Part::Cylinder","stake") 
+stake.Height = box.Width/4
+stake.Radius = box.Width/40
+Draft.rotate(stake,90,axis=FreeCAD.Vector(0,1,0))
+stake.Placement.Base = hole.Placement.Base-FreeCAD.Vector(0,box.Length/4,box.Length/4)
+doc.copyObject(stake).Placement.Base += FreeCAD.Vector(0,box.Length/2,0)
+
+cut = doc.addObject("Part::Cut","Cut007")
+cut.Base=f_wall
+cut.Tool=hole
+
+add_pyramid(doc, Base.Vector(box.Width/2,box.Width/2,b_wall.Length),box.Width,30)
+
+
+doc.recompute() 
+Gui.activeDocument().activeView().viewAxonometric()
+Gui.SendMsgToActiveView("ViewFit")
