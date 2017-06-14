@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+
+# Macro Begin: /home/local/ANT/veikherm/Downloads/Examples-master/Basic_Part_Design_Tutorial_Example_Files/eee.FCMacro +++++++++++++++++++++++++++++++++++++++++++++++++
+import FreeCAD
+
+FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(-2,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(-2,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(-1,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(-1,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(0,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(0,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(2,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(2,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(20,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(20,28,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(20,1,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(20,1,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Basic_Part_Design_Tutorial").getObject("InvoluteGear001").Placement = App.Placement(App.Vector(20,11,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Unnamed").getObject("myBox").Placement = App.Placement(App.Vector(20,11,0),App.Rotation(App.Vector(0,0,1),0))
+FreeCAD.getDocument("Unnamed").getObject("myBox").Height = '2 mm'
+FreeCAD.getDocument("Unnamed").getObject("myBox").Height = '20 mm'
+# Macro End: /home/local/ANT/veikherm/Downloads/Examples-master/Basic_Part_Design_Tutorial_Example_Files/eee.FCMacro +++++++++++++++++++++++++++++++++++++++++++++++++
